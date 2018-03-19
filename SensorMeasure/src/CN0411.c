@@ -895,9 +895,9 @@ void CN0411_cmd_off_res(uint8_t *args, cn0411_device *cn0411_dev)
 */
 void CN0411_cmd_conv_mode(uint8_t *args, cn0411_device *cn0411_dev)
 {
+	int32_t ret;
 	uint8_t *p = args;
 	char arg[5];
-	int32_t ret = CN0411_SUCCESS;
 
 	/* Check if this function gets an argument */
 	while (*(p = CN0411_find_argv(p)) != '\0') {
@@ -940,6 +940,7 @@ void CN0411_cmd_dac_val(uint8_t *args, cn0411_device *cn0411_dev)
 	}
 	input_val = atof(arg);
 	if(input_val < 0 || input_val > 2.5) {
+		ret = CN0411_FAILURE;
 		printf("Input out of range!.\n");
 	} else {
 		cn0411_dev->v_dac = input_val;
