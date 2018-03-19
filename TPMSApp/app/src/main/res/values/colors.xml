@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#292929</color>
+    <color name="colorAccent">#ca0003</color>
+    <color name="colorLayout">#c2c2c2</color>
+    <color name="colorButton">#1a1a1a</color>
+    <color name="colorText">#e7e7e7</color>
+    <color name="colorTyreText">#3b3b3b</color>
+    <color name="colorTyreWarning">#990000</color>
+    <color name="colorDirection">#0006cf</color>
+    <color name="colorGauge">#ff7b00</color>
+</resources>

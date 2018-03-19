@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.tpms.maps.tpmsapp.AboutTPMS"
+    tools:showIn="@layout/activity_about_tpms">
+    <ImageView
+        android:id="@+id/ImageView"
+        android:layout_width="@dimen/gas_size"
+        android:layout_height="@dimen/gas_size"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/flat_tyre" />
+    <!--android:layout_below="@id/submitButton"-->
+
+    <TextView
+        android:id="@+id/headline"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ImageView"
+        android:layout_marginBottom="10dp"
+        android:text="@string/about_headline"
+        android:textSize="@dimen/dim_headline"
+        android:textStyle="bold" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/headline">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_description"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="@dimen/dim_content_about" />
+
+    </ScrollView>
+
+</RelativeLayout>

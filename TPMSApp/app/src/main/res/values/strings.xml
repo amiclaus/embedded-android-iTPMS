@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">iTPMS App</string>
+    <string name="about_TPMS">About iTPMS App</string>
+    <string name="title_activity_maps_tpms">You are Here</string>
+    <string name="google_app_id">vigilant-willow-127407</string>
+    <string name="title_activity_about_tpms">About iTPMS</string>
+    <string name="about_headline">Indirect TPMS Android APP</string>
+    <string name="about_description">
+        \tThe application manages to connect via Bluetooth to the car board and acquire useful information regarding the speed of the car and the tyre pressure.\n\tOn the main screen of the application the two front wheels are monitored and in case a problem appears, the driver is warned both visual and through a sound alert, for each tyre individually\t\n The user can open a particular google map session through the application that locates the driver and the nearest five car service locations.
+    </string>
+    <string name="tpms_info">TPMS Info</string>
+    <string name="contact">Contact</string>
+</resources>
