@@ -895,16 +895,15 @@ void CN0411_cmd_off_res(uint8_t *args, cn0411_device *cn0411_dev)
 */
 void CN0411_cmd_conv_mode(uint8_t *args, cn0411_device *cn0411_dev)
 {
-	int32_t ret;
 	uint8_t *p = args;
 	char arg[5];
+	int32_t ret = CN0411_SUCCESS;
 
 	/* Check if this function gets an argument */
 	while (*(p = CN0411_find_argv(p)) != '\0') {
 		/* Save conversion mode parameter */
 		CN0411_get_argv(arg, p);
 	}
-	ret = CN0411_SUCCESS;
 	if(!strcmp(arg, "sing")) {
 		ret = CN0411_adc_conv_init(cn0411_dev, ADC_SINGLE_CONV);
 		printf("ADC set to single Conversion Mode.\n");
