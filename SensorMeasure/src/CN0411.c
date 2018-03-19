@@ -157,10 +157,10 @@ int32_t CN0411_ADC_setup0 (cn0411_device *cn0411_dev)
 
 	ret = AD7124_WriteRegister(&cn0411_dev->ad7124_dev,
 				   cn0411_dev->ad7124_dev.regs[AD7124_Config_0]);
-	ret = AD7124_ReadRegister(&cn0411_dev->ad7124_dev,
-				  &cn0411_dev->ad7124_dev.regs[AD7124_Config_0]);
-	ret = AD7124_WriteRegister(&cn0411_dev->ad7124_dev,
-				   cn0411_dev->ad7124_dev.regs[AD7124_Config_0]);
+	ret |= AD7124_ReadRegister(&cn0411_dev->ad7124_dev,
+				   &cn0411_dev->ad7124_dev.regs[AD7124_Config_0]);
+	ret |= AD7124_WriteRegister(&cn0411_dev->ad7124_dev,
+				    cn0411_dev->ad7124_dev.regs[AD7124_Config_0]);
 
 	return ret;
 }
@@ -911,6 +911,7 @@ void CN0411_cmd_conv_mode(uint8_t *args, cn0411_device *cn0411_dev)
 		ret = CN0411_adc_conv_init(cn0411_dev, ADC_CONTINUOUS_CONV);
 		printf("ADC set to continuous Conversion Mode.\n");
 	} else {
+		ret = CN0411_FAILURE;
 		printf("Incorrect input value!\n");
 	}
 	if (ret != CN0411_SUCCESS) {
