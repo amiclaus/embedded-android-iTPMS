@@ -1,0 +1,36 @@
+RAM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+input                                                                             0x0500      30
+info_car                                                                          0x051E      20
+left                                                                              0x0532       7
+right                                                                             0x0539       7
+s                                                                                 0x0540       2
+ok                                                                                0x0542       2
+done                                                                              0x0544       2
+LRPM                                                                              0x0546       2
+RRPM                                                                              0x0548       2
+_seed (stdlib.lib)                                                                0x054A       4
+
+EEPROM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                                          Register  Size
+------------------------------------------------------------------------------------------------
+i                                                                                 R4,R5        2
+j                                                                                 R6,R7        2
+l                                                                                 R8,R9        2
+r                                                                                 R10,R11      2
+c                                                                                 R12,R13      2
+
+FLASH Allocation [words]
+Function                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+getchar1                                                                          0x00088     18
+putchar0                                                                          0x0009A      7
+main                                                                              0x000A1    283
+atoi                                                                              0x001BC     53
+isdigit                                                                           0x001F1      9
+isspace                                                                           0x001FA     11

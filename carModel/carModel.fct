@@ -1,0 +1,3 @@
+main DSTACK_USAGE:0 DSTACK_LEVEL:0 FILE:"carModel.c" LINE:61
+atoi DSTACK_USAGE:2 DSTACK_LEVEL:2 FILE:"C:\cvavreval\lib\stdlib.lib" LINE:297
+isspace DSTACK_USAGE:1 DSTACK_LEVEL:3 FILE:"C:\cvavreval\lib\ctype.lib" LINE:154
