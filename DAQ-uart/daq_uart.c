@@ -1,0 +1,410 @@
+/*******************************************************
+This program was created by the CodeWizardAVR V3.25 
+Automatic Program Generator
+© Copyright 1998-2016 Pavel Haiduc, HP InfoTech s.r.l.
+http://www.hpinfotech.com
+
+Project : 
+Version : 
+Date    : 3/17/2016
+Author  : 
+Company : 
+Comments: 
+
+
+Chip type               : ATmega64A
+Program type            : Application
+AVR Core Clock frequency: 8.000000 MHz
+Memory model            : Small
+External RAM size       : 0
+Data Stack size         : 1024
+*******************************************************/
+
+#include <io.h>
+#include <delay.h>
+#include <stdlib.h>
+#include <mega64a.h>
+
+// Declare your global variables here
+unsigned long int freq1c,freq2c,speed_rpm,speed_ecu,speed_ecu_prev,tire_dim,steer_wheel;
+unsigned long i=0,j=0,dur1,dur2,s=0, in, ok=0,tr=0,sp=0,sw=0,m=0,done=0,cycle;
+char input[20],td[6],sp_ecu[6],st_wh[6],buffer1[6],buffer2[6],buffer3[6],LT='0',RT='0';
+
+#define DATA_REGISTER_EMPTY (1<<UDRE0)
+#define RX_COMPLETE (1<<RXC1)
+#define FRAMING_ERROR (1<<FE1)
+#define PARITY_ERROR (1<<UPE1)
+#define DATA_OVERRUN (1<<DOR1)
+
+#pragma used+
+char getchar1(void)
+{
+unsigned char status;
+char data;
+while (1)
+      {
+      while (((status=UCSR1A) & RX_COMPLETE)==0);
+      data=UDR1;
+      if ((status & (FRAMING_ERROR | PARITY_ERROR | DATA_OVERRUN))==0)
+         return data;
+      }
+}
+void putchar0(char c)
+{
+while ((UCSR0A & DATA_REGISTER_EMPTY)==0);
+UDR0=c;
+}
+#pragma used-
+// Timer1 overflow interrupt service routine
+interrupt [TIM1_OVF] void timer1_ovf_isr(void)
+{
+// Place your code here
+    i++;
+}
+
+// Timer2 overflow interrupt service routine
+interrupt [TIM2_OVF] void timer2_ovf_isr(void)
+{
+// Place your code here
+    j++;
+}
+
+void main(void)
+{
+// Declare your local variables here
+
+// Input/Output Ports initialization
+// Port A initialization
+// Function: Bit7=In Bit6=In Bit5=In Bit4=In Bit3=In Bit2=In Bit1=In Bit0=In 
+DDRA=(0<<DDA7) | (0<<DDA6) | (0<<DDA5) | (0<<DDA4) | (0<<DDA3) | (0<<DDA2) | (0<<DDA1) | (0<<DDA0);
+// State: Bit7=T Bit6=T Bit5=T Bit4=T Bit3=T Bit2=T Bit1=T Bit0=T 
+PORTA=(0<<PORTA7) | (0<<PORTA6) | (0<<PORTA5) | (0<<PORTA4) | (0<<PORTA3) | (0<<PORTA2) | (0<<PORTA1) | (0<<PORTA0);
+
+// Port B initialization
+// Function: Bit7=In Bit6=In Bit5=In Bit4=In Bit3=In Bit2=In Bit1=In Bit0=In 
+DDRB=(0<<DDB7) | (0<<DDB6) | (0<<DDB5) | (0<<DDB4) | (0<<DDB3) | (0<<DDB2) | (0<<DDB1) | (0<<DDB0);
+// State: Bit7=T Bit6=T Bit5=T Bit4=T Bit3=T Bit2=T Bit1=T Bit0=T 
+PORTB=(0<<PORTB7) | (0<<PORTB6) | (0<<PORTB5) | (0<<PORTB4) | (0<<PORTB3) | (0<<PORTB2) | (0<<PORTB1) | (0<<PORTB0);
+
+// Port C initialization
+// Function: Bit7=In Bit6=In Bit5=In Bit4=In Bit3=In Bit2=In Bit1=In Bit0=In 
+DDRC=(0<<DDC7) | (0<<DDC6) | (0<<DDC5) | (0<<DDC4) | (0<<DDC3) | (0<<DDC2) | (0<<DDC1) | (0<<DDC0);
+// State: Bit7=T Bit6=T Bit5=T Bit4=T Bit3=T Bit2=T Bit1=T Bit0=T 
+PORTC=(0<<PORTC7) | (0<<PORTC6) | (0<<PORTC5) | (0<<PORTC4) | (0<<PORTC3) | (0<<PORTC2) | (0<<PORTC1) | (0<<PORTC0);
+
+// Port D initialization
+// Function: Bit7=In Bit6=In Bit5=In Bit4=In Bit3=In Bit2=In Bit1=In Bit0=In 
+DDRD=(0<<DDD7) | (0<<DDD6) | (0<<DDD5) | (0<<DDD4) | (0<<DDD3) | (0<<DDD2) | (0<<DDD1) | (0<<DDD0);
+// State: Bit7=T Bit6=T Bit5=T Bit4=T Bit3=T Bit2=T Bit1=T Bit0=T 
+PORTD=(0<<PORTD7) | (0<<PORTD6) | (0<<PORTD5) | (0<<PORTD4) | (0<<PORTD3) | (0<<PORTD2) | (0<<PORTD1) | (0<<PORTD0);
+
+// Port E initialization
+// Function: Bit7=In Bit6=In Bit5=In Bit4=In Bit3=In Bit2=In Bit1=In Bit0=In 
+DDRE=(0<<DDE7) | (0<<DDE6) | (0<<DDE5) | (0<<DDE4) | (0<<DDE3) | (0<<DDE2) | (0<<DDE1) | (0<<DDE0);
+// State: Bit7=T Bit6=T Bit5=T Bit4=T Bit3=T Bit2=T Bit1=T Bit0=T 
+PORTE=(0<<PORTE7) | (0<<PORTE6) | (0<<PORTE5) | (0<<PORTE4) | (0<<PORTE3) | (0<<PORTE2) | (0<<PORTE1) | (0<<PORTE0);
+
+// Port F initialization
+// Function: Bit7=In Bit6=In Bit5=In Bit4=In Bit3=In Bit2=In Bit1=In Bit0=In 
+DDRF=(0<<DDF7) | (0<<DDF6) | (0<<DDF5) | (0<<DDF4) | (0<<DDF3) | (0<<DDF2) | (0<<DDF1) | (0<<DDF0);
+// State: Bit7=T Bit6=T Bit5=T Bit4=T Bit3=T Bit2=T Bit1=T Bit0=T 
+PORTF=(0<<PORTF7) | (0<<PORTF6) | (0<<PORTF5) | (0<<PORTF4) | (0<<PORTF3) | (0<<PORTF2) | (0<<PORTF1) | (0<<PORTF0);
+
+// Port G initialization
+// Function: Bit4=In Bit3=In Bit2=In Bit1=In Bit0=In 
+DDRG=(0<<DDG4) | (0<<DDG3) | (0<<DDG2) | (0<<DDG1) | (0<<DDG0);
+// State: Bit4=T Bit3=T Bit2=T Bit1=T Bit0=T 
+PORTG=(0<<PORTG4) | (0<<PORTG3) | (0<<PORTG2) | (0<<PORTG1) | (0<<PORTG0);
+
+// Timer/Counter 0 initialization
+// Clock source: System Clock
+// Clock value: Timer 0 Stopped
+// Mode: Normal top=0xFF
+// OC0 output: Disconnected
+ASSR=0<<AS0;
+TCCR0=(0<<WGM00) | (0<<COM01) | (0<<COM00) | (0<<WGM01) | (0<<CS02) | (0<<CS01) | (0<<CS00);
+TCNT0=0x00;
+OCR0=0x00;
+
+// Timer/Counter 1 initialization
+// Clock source: System Clock
+// Clock value: 8000.000 kHz
+// Mode: Fast PWM top=0x00FF
+// OC1A output: Disconnected
+// OC1B output: Disconnected
+// OC1C output: Disconnected
+// Noise Canceler: Off
+// Input Capture on Rising Edge
+// Timer Period: 0.032 ms
+// Timer1 Overflow Interrupt: On
+// Input Capture Interrupt: Off
+// Compare A Match Interrupt: Off
+// Compare B Match Interrupt: Off
+// Compare C Match Interrupt: Off
+TCCR1A=(0<<COM1A1) | (0<<COM1A0) | (0<<COM1B1) | (0<<COM1B0) | (0<<COM1C1) | (0<<COM1C0) | (0<<WGM11) | (1<<WGM10);
+TCCR1B=(0<<ICNC1) | (1<<ICES1) | (0<<WGM13) | (1<<WGM12) | (0<<CS12) | (0<<CS11) | (1<<CS10);
+TCNT1H=0x00;
+TCNT1L=0x00;
+ICR1H=0x00;
+ICR1L=0x00;
+OCR1AH=0x00;
+OCR1AL=0x00;
+OCR1BH=0x00;
+OCR1BL=0x00;
+OCR1CH=0x00;
+OCR1CL=0x00;
+
+// Timer/Counter 2 initialization
+// Clock source: System Clock
+// Clock value: 8000.000 kHz
+// Mode: Normal top=0xFF
+// OC2 output: Disconnected
+// Timer Period: 0.032 ms
+TCCR2=(0<<WGM20) | (0<<COM21) | (0<<COM20) | (0<<WGM21) | (0<<CS22) | (0<<CS21) | (1<<CS20);
+TCNT2=0x00;
+OCR2=0x00;
+
+// Timer/Counter 3 initialization
+// Clock source: System Clock
+// Clock value: Timer3 Stopped
+// Mode: Normal top=0xFFFF
+// OC3A output: Disconnected
+// OC3B output: Disconnected
+// OC3C output: Disconnected
+// Noise Canceler: Off
+// Input Capture on Falling Edge
+// Timer3 Overflow Interrupt: Off
+// Input Capture Interrupt: Off
+// Compare A Match Interrupt: Off
+// Compare B Match Interrupt: Off
+// Compare C Match Interrupt: Off
+TCCR3A=(0<<COM3A1) | (0<<COM3A0) | (0<<COM3B1) | (0<<COM3B0) | (0<<COM3C1) | (0<<COM3C0) | (0<<WGM31) | (0<<WGM30);
+TCCR3B=(0<<ICNC3) | (1<<ICES3) | (0<<WGM33) | (0<<WGM32) | (0<<CS32) | (0<<CS31) | (0<<CS30);
+TCNT3H=0x00;
+TCNT3L=0x00;
+ICR3H=0x00;
+ICR3L=0x00;
+OCR3AH=0x00;
+OCR3AL=0x00;
+OCR3BH=0x00;
+OCR3BL=0x00;
+OCR3CH=0x00;
+OCR3CL=0x00;
+
+// Timer(s)/Counter(s) Interrupt(s) initialization
+TIMSK=(0<<OCIE2) | (1<<TOIE2) | (0<<TICIE1) | (0<<OCIE1A) | (0<<OCIE1B) | (1<<TOIE1) | (0<<OCIE0) | (0<<TOIE0);
+ETIMSK=(0<<TICIE3) | (0<<OCIE3A) | (0<<OCIE3B) | (0<<TOIE3) | (0<<OCIE3C) | (0<<OCIE1C);
+
+// External Interrupt(s) initialization
+// INT0: Off
+// INT1: Off
+// INT2: Off
+// INT3: Off
+// INT4: Off
+// INT5: Off
+// INT6: Off
+// INT7: Off
+EICRA=(0<<ISC31) | (0<<ISC30) | (0<<ISC21) | (0<<ISC20) | (0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
+EICRB=(0<<ISC71) | (0<<ISC70) | (0<<ISC61) | (0<<ISC60) | (0<<ISC51) | (0<<ISC50) | (0<<ISC41) | (0<<ISC40);
+EIMSK=(0<<INT7) | (0<<INT6) | (0<<INT5) | (0<<INT4) | (0<<INT3) | (0<<INT2) | (0<<INT1) | (0<<INT0);
+
+// USART0 initialization
+// Communication Parameters: 8 Data, 1 Stop, No Parity
+// USART0 Receiver: Off
+// USART0 Transmitter: On
+// USART0 Mode: Asynchronous
+// USART0 Baud Rate: 9600
+UCSR0A=(0<<RXC0) | (0<<TXC0) | (0<<UDRE0) | (0<<FE0) | (0<<DOR0) | (0<<UPE0) | (0<<U2X0) | (0<<MPCM0);
+UCSR0B=(0<<RXCIE0) | (0<<TXCIE0) | (0<<UDRIE0) | (0<<RXEN0) | (1<<TXEN0) | (0<<UCSZ02) | (0<<RXB80) | (0<<TXB80);
+UCSR0C=(0<<UMSEL0) | (0<<UPM01) | (0<<UPM00) | (0<<USBS0) | (1<<UCSZ01) | (1<<UCSZ00) | (0<<UCPOL0);
+UBRR0H=0x00;
+UBRR0L=0x33;
+
+// USART1 initialization
+// Communication Parameters: 8 Data, 1 Stop, No Parity
+// USART1 Receiver: On
+// USART1 Transmitter: Off
+// USART1 Mode: Asynchronous
+// USART1 Baud Rate: 9600
+UCSR1A=(0<<RXC1) | (0<<TXC1) | (0<<UDRE1) | (0<<FE1) | (0<<DOR1) | (0<<UPE1) | (0<<U2X1) | (0<<MPCM1);
+UCSR1B=(0<<RXCIE1) | (0<<TXCIE1) | (0<<UDRIE1) | (1<<RXEN1) | (0<<TXEN1) | (0<<UCSZ12) | (0<<RXB81) | (0<<TXB81);
+UCSR1C=(0<<UMSEL1) | (0<<UPM11) | (0<<UPM10) | (0<<USBS1) | (1<<UCSZ11) | (1<<UCSZ10) | (0<<UCPOL1);
+UBRR1H=0x00;
+UBRR1L=0x33;
+
+// Analog Comparator initialization
+// Analog Comparator: Off
+// The Analog Comparator's positive input is
+// connected to the AIN0 pin
+// The Analog Comparator's negative input is
+// connected to the AIN1 pin
+ACSR=(1<<ACD) | (0<<ACBG) | (0<<ACO) | (0<<ACI) | (0<<ACIE) | (0<<ACIC) | (0<<ACIS1) | (0<<ACIS0);
+SFIOR=(0<<ACME);
+
+// ADC initialization
+// ADC disabled
+ADCSRA=(0<<ADEN) | (0<<ADSC) | (0<<ADFR) | (0<<ADIF) | (0<<ADIE) | (0<<ADPS2) | (0<<ADPS1) | (0<<ADPS0);
+
+// SPI initialization
+// SPI disabled
+SPCR=(0<<SPIE) | (0<<SPE) | (0<<DORD) | (0<<MSTR) | (0<<CPOL) | (0<<CPHA) | (0<<SPR1) | (0<<SPR0);
+
+// TWI initialization
+// TWI disabled
+TWCR=(0<<TWEA) | (0<<TWSTA) | (0<<TWSTO) | (0<<TWEN) | (0<<TWIE);
+
+// Globally enable interrupts
+#asm("sei")
+TCCR2=0x00;
+TCCR1B=0x00;
+TCCR1A=0x01;
+TCNT1=0x00;
+TCNT2=0x00;
+TIMSK=0x00;
+
+while (1){
+        in=0; 
+        ok=0;
+        tr=0;
+        sp=0; 
+        sw=0;
+        m=0; 
+        done=0;
+        while (1){
+            if (getchar1()=='V'){
+             while (1){
+                input[in]=getchar1();
+                if (input[in]=='V'){ 
+                    done=1;
+                    break;
+                    }
+                else
+                    in=in+1; 
+                }
+            }
+            if (done==1)
+                break;    
+        }  
+        input[in+1]='\0';   
+        for (m =0;m<in; m++){
+            if (input[m]=='T'){
+                ok=1;
+                m=m+1;
+            }
+            if (input[m]=='S'){
+                ok=2;
+                m=m+1;
+            }
+            if (ok==0){
+                td[tr]=input[m];     
+                tr=tr+1;
+            }
+            else if(ok==1){
+                sp_ecu[sp]=input[m];
+                sp=sp+1;
+            }
+            else{
+                st_wh[sw]=input[m];
+                sw=sw+1;
+            }    
+        }
+        td[tr]='\0';
+        sp_ecu[sp]='\0';
+        st_wh[sw]='\0';  
+  
+        tire_dim = atoi(td); 
+        speed_ecu = atoi(sp_ecu);
+        steer_wheel = atoi(st_wh);
+
+//      Place your code here    
+        TIMSK=0x04; // enable overflow interrupt of timer1
+        TCNT1=0x00;   
+        TCCR1B=0x4F; /* start timer1 with external pulses (T1 rising edge) */ 
+        delay_ms(500); // wait for one second
+        TCCR1B=0x00; //stop timer1 
+        dur1=TCNT1; /* store the number of counts from TCNT1 register */ 
+        TIMSK=0x00; //disable interrupt
+        freq1c = (dur1+i*256)*2; /* calculate the frequency as in previous equation */
+        freq1c = freq1c;//*10000/9635;
+        TCNT1=0x00; /* clear TCNT1 register for the next reading */
+        i=0; /* clear number of overflows in one second for the next reading */  
+        ltoa(freq1c,buffer1);      
+
+        TIMSK=0x40;        
+        TCNT2=0x00;    
+        TCCR2=0x07;
+        delay_ms(500); // wait for one second
+        TCCR2=0x00; //stop timer2   
+        dur2=TCNT2; /* store the number of counts in TCNT3 register */  
+        TIMSK=0x00;
+        freq2c = (dur2 + j*256)*2; /* calculate the frequency */    
+        TCNT2=0x00; /* clear TCNT1 register for the next reading */ 
+        j=0; /* clear number of overflows in one second for the next reading */ 
+        if (speed_ecu < 47 && freq2c>2 ) {
+            freq2c=freq2c+10;
+        }          
+        s=0;
+         ltoa(freq2c,buffer2);  
+        while (buffer1[s]!='\0'){
+            putchar0(buffer1[s]);
+            s++;
+        }       
+        putchar0(',');         
+        
+        s=0;
+        while (buffer2[s]!='\0'){
+            putchar0(buffer2[s]);
+            s++;
+        }       
+        putchar0(';'); 
+           
+        speed_rpm = ((freq1c+freq2c)/2.0)*3.14*tire_dim*6/10000;
+
+        if (steer_wheel==0){
+            if (speed_ecu==speed_ecu_prev){
+                if (cycle==3){
+                     if (freq1c>(freq2c+30))
+                        LT='1';
+                     else if (freq2c>(freq1c+30))
+                        RT='1';
+                     else if (speed_rpm>speed_ecu+5){
+                        LT='1';
+                        RT='1';
+                     }
+                     else
+                        cycle=0;
+                }
+                else{
+                    cycle=cycle+1;
+                }
+            }
+            else {
+                cycle=0;
+            }
+        }
+        else{
+            cycle=0;
+        }
+       if ((freq1c==0&&freq2c==0)||(speed_ecu==0)){
+        LT='0';
+        RT='0'; 
+        cycle=0; 
+       }
+        putchar0(LT);   
+        putchar0('L');
+        putchar0(RT);
+        putchar0('R');  
+         
+        if ((LT=='1')||RT=='1'){
+            speed_rpm=speed_ecu;
+        } 
+        s=0;
+        ltoa(speed_rpm,buffer3);
+        while (buffer3[s]!='\0'){
+                putchar0(buffer3[s]);
+                s++;
+        }                            
+        putchar0('S');
+        speed_ecu_prev=speed_ecu;            
+    }     
+}

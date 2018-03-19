@@ -1,0 +1,3 @@
+main DSTACK_USAGE:0 DSTACK_LEVEL:0 FILE:"daq_uart.c" LINE:72
+ltoa DSTACK_USAGE:14 DSTACK_LEVEL:14 FILE:"C:\cvavreval\lib\stdlib.lib" LINE:937
+timer2_ovf_isr DSTACK_USAGE:7 DSTACK_LEVEL:21 FILE:"daq_uart.c" LINE:66

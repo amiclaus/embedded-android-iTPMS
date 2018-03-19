@@ -1,0 +1,54 @@
+RAM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+freq1c                                                                            0x0500       4
+freq2c                                                                            0x0504       4
+speed_rpm                                                                         0x0508       4
+speed_ecu                                                                         0x050C       4
+speed_ecu_prev                                                                    0x0510       4
+tire_dim                                                                          0x0514       4
+steer_wheel                                                                       0x0518       4
+i                                                                                 0x051C       4
+j                                                                                 0x0520       4
+dur1                                                                              0x0524       4
+dur2                                                                              0x0528       4
+s                                                                                 0x052C       4
+in                                                                                0x0530       4
+ok                                                                                0x0534       4
+tr                                                                                0x0538       4
+sp                                                                                0x053C       4
+sw                                                                                0x0540       4
+m                                                                                 0x0544       4
+done                                                                              0x0548       4
+cycle                                                                             0x054C       4
+input                                                                             0x0550      20
+td                                                                                0x0564       6
+sp_ecu                                                                            0x056A       6
+st_wh                                                                             0x0570       6
+buffer1                                                                           0x0576       6
+buffer2                                                                           0x057C       6
+buffer3                                                                           0x0582       6
+_seed (stdlib.lib)                                                                0x0588       4
+
+EEPROM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                                          Register  Size
+------------------------------------------------------------------------------------------------
+LT                                                                                R5           1
+RT                                                                                R4           1
+
+FLASH Allocation [words]
+Function                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+getchar1                                                                          0x00083     18
+putchar0                                                                          0x00095      7
+timer1_ovf_isr                                                                    0x0009C      4
+timer2_ovf_isr                                                                    0x000A0     14
+main                                                                              0x000AE    769
+atoi                                                                              0x003AF     53
+ltoa                                                                              0x003E4     65
+isdigit                                                                           0x00425      9
+isspace                                                                           0x0042E     11
