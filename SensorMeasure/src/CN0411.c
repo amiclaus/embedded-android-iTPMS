@@ -904,6 +904,7 @@ void CN0411_cmd_conv_mode(uint8_t *args, cn0411_device *cn0411_dev)
 		/* Save conversion mode parameter */
 		CN0411_get_argv(arg, p);
 	}
+	ret = CN0411_SUCCESS;
 	if(!strcmp(arg, "sing")) {
 		ret = CN0411_adc_conv_init(cn0411_dev, ADC_SINGLE_CONV);
 		printf("ADC set to single Conversion Mode.\n");
